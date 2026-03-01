@@ -1,0 +1,1 @@
+{\n  "name": "backend-server",\n  "version": "1.0.0",\n  "description": "Backend server for the application",\n  "main": "index.js",\n  "scripts": {\n    "start": "node index.js",\n    "test": "echo 'Error: no test specified' && exit 1"\n  },\n  "author": "darren3133",\n  "license": "MIT"\n}
