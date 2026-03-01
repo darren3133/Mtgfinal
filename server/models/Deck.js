@@ -1,20 +1,51 @@
-'use strict';
-
 const mongoose = require('mongoose');
 
-const cardSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    manaCost: { type: String, required: true },
-    type: { type: String, required: true },
-    power: { type: Number, required: false },
-    toughness: { type: Number, required: false },
-});
-
 const deckSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    cards: [cardSchema],
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
+    userID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    format: {
+        type: String,
+        enum: ['Standard', 'Modern', 'Legacy', 'Commander', 'Casual'],
+        required: true,
+    },
+    description: {
+        type: String,
+    },
+    cards: [{
+        cardID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Card',
+            required: true,
+        },
+        quantity: {
+            type: Number,
+            required: true,
+            min: 1,
+            max: 4,
+        },
+    }],
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    }
 });
 
-module.exports = mongoose.model('Deck', deckSchema);
+// Middleware to update the updatedAt field on save
+deckSchema.pre('save', function(next) {
+    this.updatedAt = Date.now();
+    next();
+});
+
+const Deck = mongoose.model('Deck', deckSchema);
+module.exports = Deck;
